@@ -11,11 +11,6 @@ import TaskList from '../components/TaskList';
 import Title from '../components/Title';
 import CreateTask from '../components/tasks/CreateTask';
 
-// get userID from localStorage
-const user = JSON.parse(localStorage.getItem("user"));
-const userID = user.id;
-const url = `https://65c09414dc74300bce8c426a.mockapi.io/tdcEval/user/${userID}/task`;
-
 const DisplayTask = () => {
     const [tasks, setTasks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +24,10 @@ const DisplayTask = () => {
             .then(() => setIsLoading(false))
             .catch(console.error);
     }, []);
+
+    // get userID from localStorage
+    const userID = JSON.parse(localStorage.getItem("user")).id;
+    const url = `https://65c09414dc74300bce8c426a.mockapi.io/tdcEval/user/${userID}/task`;
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -73,33 +72,33 @@ const DisplayTask = () => {
                         <div>
                             <CreateTask getTaskById={getTaskById} />
                         </div>
-                        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                        <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '1rem', border: '1px solid #C71585' }}>
                             {
-                                tasks &&
-                                    // ? <p>loading...</p>
-                                    // : 
-                                  <>
+                                isLoading
+                                ? <p>loading...</p>
+                                : 
+                                <>
                                     <TaskList
                                         tasks={tasks}
                                         deleteTaskById={deleteTaskById}
-                                        rowsPerPage={rowsPerPage} 
+                                        rowsPerPage={rowsPerPage}
                                         page={page}
                                     />
                                     <TablePagination
-                                    rowsPerPageOptions={[1, 2, 3]}
-                                    component="div"
-                                    count={tasks.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onPageChange={handleChangePage}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                />
-                                  </>
+                                        rowsPerPageOptions={[1, 2, 3]}
+                                        component="div"
+                                        count={tasks.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                    />
+                                </>
                             }
-                            {
+                            {/* {
                                 isLoading && <p>loading...</p>
-                            }
-                            
+                            } */}
+
                         </Paper>
                     </Box>
                 </Stack>

@@ -76,8 +76,8 @@ const UpdateTask = () => {
     return (
         <>
             <Stack sx={{ height: '70vh', marginTop: '5%' }} spacing={2} alignItems='center' justifyContent='center'>
-                <Container sx={{ borderRadius: '50px', background: '#FFF8DC', height: '60vh' }} maxWidth='sm'>
-                    <Stack sx={{ marginTop: '8%' }} spacing={2} textAlign='center'>
+                <Container sx={{ borderRadius: '50px', background: '#FFF8DC', height: '60vh', border: '1px solid #C71585' }} maxWidth='sm'>
+                    <Stack sx={{ marginTop: '5rem' }} spacing={2} textAlign='center'>
 
                         {
                             data && (
