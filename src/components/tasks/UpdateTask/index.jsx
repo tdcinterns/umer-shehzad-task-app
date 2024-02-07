@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // Validation Schema
 const validationSchema = yup.object({
@@ -77,66 +78,72 @@ const UpdateTask = () => {
         <>
             <Stack sx={{ height: '70vh', marginTop: '5%' }} spacing={2} alignItems='center' justifyContent='center'>
                 <Container sx={{ borderRadius: '50px', background: '#FFF8DC', height: '60vh', border: '1px solid #C71585' }} maxWidth='sm'>
-                    <Stack sx={{ marginTop: '5rem' }} spacing={2} textAlign='center'>
-
+                    <Stack sx={{ marginTop: '5rem' }} spacing={2} textAlign='center' alignItems="center">
                         {
-                            data && (
-                                <form onSubmit={formik.handleSubmit}>
-                                    <Stack spacing={2}>
-                                        <div>
+                            isLoading
+                                ? <CircularProgress color='secondary' />
+                                :
+                                data && (
+                                    <form onSubmit={formik.handleSubmit}>
+                                        <Stack spacing={5}>
                                             <div>
-                                                <TextField
-                                                    disabled
-                                                    id="name"
-                                                    name="name"
-                                                    label="Name"
-                                                    variant='standard'
-                                                    value={formik.values.name}
-                                                />
+                                                <div>
+                                                    <TextField
+                                                        disabled
+                                                        id="name"
+                                                        name="name"
+                                                        label="Name"
+                                                        variant='standard'
+                                                        color='secondary'
+                                                        value={formik.values.name}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <TextField
+                                                        id="title"
+                                                        name="title"
+                                                        label="Title"
+                                                        variant='standard'
+                                                        color='secondary'
+                                                        value={formik.values.title}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        error={formik.touched.title && Boolean(formik.errors.title)}
+                                                        helperText={formik.touched.title && formik.errors.title}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <TextField
+                                                        id="discription"
+                                                        name="discription"
+                                                        label="Discription"
+                                                        variant='standard'
+                                                        color='secondary'
+                                                        value={formik.values.discription}
+                                                        onChange={formik.handleChange}
+                                                        onBlur={formik.handleBlur}
+                                                        error={formik.touched.discription && Boolean(formik.errors.discription)}
+                                                        helperText={formik.touched.discription && formik.errors.discription}
+                                                    />
+                                                </div>
                                             </div>
                                             <div>
-                                                <TextField
-                                                    id="title"
-                                                    name="title"
-                                                    label="Title"
-                                                    variant='standard'
-                                                    value={formik.values.title}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={formik.touched.title && Boolean(formik.errors.title)}
-                                                    helperText={formik.touched.title && formik.errors.title}
-                                                />
+                                                <Button
+                                                    color="secondary"
+                                                    variant="contained"
+                                                    type="submit"
+                                                >
+                                                    {buttonName}
+                                                </Button>
                                             </div>
-                                            <div>
-                                                <TextField
-                                                    id="discription"
-                                                    name="discription"
-                                                    label="Discription"
-                                                    variant='standard'
-                                                    value={formik.values.discription}
-                                                    onChange={formik.handleChange}
-                                                    onBlur={formik.handleBlur}
-                                                    error={formik.touched.discription && Boolean(formik.errors.discription)}
-                                                    helperText={formik.touched.discription && formik.errors.discription}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <Button
-                                                color="primary"
-                                                variant="contained"
-                                                type="submit"
-                                            >
-                                                {buttonName}
-                                            </Button>
-                                        </div>
-                                    </Stack>
-                                </form>
-                            )}
-                        {/* </div> */}
-                        {
-                            isLoading && <p>loading...</p>
+                                        </Stack>
+                                    </form>
+                                )
                         }
+                        {/* </div> */}
+                        {/* {
+                            isLoading && 
+                        } */}
                     </Stack>
                 </Container>
             </Stack>

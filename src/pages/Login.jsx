@@ -83,17 +83,12 @@ function Login() {
 
   return (
     <Stack sx={{ height: '70vh', marginTop: '5%' }} spacing={2} alignItems='center' justifyContent='center'>
-      <Container sx={{ borderRadius: '50px', background: '#FFF8DC', height: '60vh' }} maxWidth='sm'>
+      <Container sx={{ borderRadius: '50px', background: '#FFF8DC', height: '60vh', border: '1px solid #C71585' }} maxWidth='sm'>
         <Stack sx={{ marginTop: '8%' }} spacing={2} textAlign='center'>
           <div>
             <Title title={title} />
           </div>
           <div>
-            {/* <FormikLogin
-                            initialValues={initialValues}
-                            onSubmit={onSubmit}
-                            validationSchema={validationSchema}
-                        /> */}
             <form onSubmit={formik.handleSubmit}>
               <Stack spacing={2}>
                 <div>
@@ -103,6 +98,7 @@ function Login() {
                       name="name"
                       label="Name"
                       variant='standard'
+                      color='secondary'
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -116,6 +112,7 @@ function Login() {
                       name="email"
                       label="Email"
                       variant='standard'
+                      color='secondary'
                       value={formik.values.email}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -130,6 +127,7 @@ function Login() {
                       label="Password"
                       type="password"
                       variant='standard'
+                      color='secondary'
                       value={formik.values.password}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -140,7 +138,7 @@ function Login() {
                 </div>
                 <div>
                   <Button
-                    color="primary"
+                    color="secondary"
                     variant="contained"
                     type="submit"
                   >

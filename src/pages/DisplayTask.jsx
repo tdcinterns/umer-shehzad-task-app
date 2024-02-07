@@ -4,12 +4,31 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Paper } from '@mui/material';
 import axios from 'axios';
+import { styled } from '@mui/material/styles';
 import TablePagination from '@mui/material/TablePagination';
+import CircularProgress from '@mui/material/CircularProgress';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
 // import files
 import TaskList from '../components/TaskList';
 import Title from '../components/Title';
 import CreateTask from '../components/tasks/CreateTask';
+
+// Custom style for Table Head
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: '#FFF8DC',
+    color: '#C71585',
+    fontWeight: 600,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
 
 const DisplayTask = () => {
     const [tasks, setTasks] = useState([]);
@@ -72,34 +91,45 @@ const DisplayTask = () => {
                         <div>
                             <CreateTask getTaskById={getTaskById} />
                         </div>
-                        <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '1rem', border: '1px solid #C71585' }}>
-                            {
-                                isLoading
-                                ? <p>loading...</p>
-                                : 
-                                <>
-                                    <TaskList
-                                        tasks={tasks}
-                                        deleteTaskById={deleteTaskById}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                    />
-                                    <TablePagination
-                                        rowsPerPageOptions={[1, 2, 3]}
-                                        component="div"
-                                        count={tasks.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onPageChange={handleChangePage}
-                                        onRowsPerPageChange={handleChangeRowsPerPage}
-                                    />
-                                </>
-                            }
-                            {/* {
-                                isLoading && <p>loading...</p>
-                            } */}
 
-                        </Paper>
+                        {
+                            isLoading
+                                ? <CircularProgress color='secondary' />
+                                :
+                                <>
+                                    <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '1rem', border: '1px solid #C71585' }}>
+                                        <TableContainer sx={{ maxHeight: 440 }}>
+                                            <Table aria-label="custom table">
+                                                <TableHead >
+                                                    <TableRow>
+                                                        <StyledTableCell>NO.</StyledTableCell>
+                                                        <StyledTableCell>TITLE</StyledTableCell>
+                                                        <StyledTableCell>DISCRIPTION</StyledTableCell>
+                                                        <StyledTableCell align='justify'>ACTION</StyledTableCell>
+                                                    </TableRow>
+                                                </TableHead>
+
+                                                <TaskList
+                                                    tasks={tasks}
+                                                    deleteTaskById={deleteTaskById}
+                                                    rowsPerPage={rowsPerPage}
+                                                    page={page}
+                                                />
+
+                                            </Table>
+                                        </TableContainer>
+                                        <TablePagination
+                                            rowsPerPageOptions={[1, 2, 3]}
+                                            component="div"
+                                            count={tasks.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            onPageChange={handleChangePage}
+                                            onRowsPerPageChange={handleChangeRowsPerPage}
+                                        />
+                                    </Paper>
+                                </>
+                        }
                     </Box>
                 </Stack>
             </Container>

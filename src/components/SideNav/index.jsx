@@ -98,6 +98,8 @@ export default function MiniDrawer() {
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
+                    color: '#C71585',
+                    // fontWeight: open ? "bold" : "normal"
                   }}
                 >
                   <ListItemIcon
@@ -119,6 +121,8 @@ export default function MiniDrawer() {
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
+                    color: '#C71585',
+                    // fontWeight: open ? "bold" : "normal"
                   }}
                 >
                   <ListItemIcon
@@ -144,6 +148,7 @@ export default function MiniDrawer() {
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
+                    color: '#C71585',
                   }}
                 >
                   <ListItemIcon
@@ -165,6 +170,7 @@ export default function MiniDrawer() {
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
+                    color: '#C71585',
                   }}
                 >
                   <ListItemIcon

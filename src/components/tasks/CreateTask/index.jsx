@@ -76,7 +76,8 @@ const CreateTask = ({ getTaskById }) => {
   return (
     <>
       <Button
-        variant="outlined"
+        variant="contained"
+        color='secondary'
         onClick={handleOpen}
       >
         Create Task
