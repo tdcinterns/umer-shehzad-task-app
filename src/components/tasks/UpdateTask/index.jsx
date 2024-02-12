@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from "@mui/material/Button";
 import * as yup from 'yup';
 import { Container, Stack, } from '@mui/material';
@@ -7,6 +7,9 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import CircularProgress from '@mui/material/CircularProgress';
+
+// import loading context
+import { loadingContext } from '../../../App';
 
 // Validation Schema
 const validationSchema = yup.object({
@@ -19,16 +22,13 @@ const validationSchema = yup.object({
 });
 
 const UpdateTask = () => {
-
+    const {isLoading, setIsLoading} = useContext(loadingContext);
     const [data, setData] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
     const params = useParams();
     const navigate = useNavigate();
     const buttonName = 'Update Task';
     // user ID
     const userID = JSON.parse(localStorage.getItem("user")).id;
-    // get name from localStorage
-    const userName = JSON.parse(localStorage.getItem("user")).name;
 
     useEffect(() => {
         getSingleTaskDetails()

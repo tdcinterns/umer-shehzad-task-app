@@ -1,4 +1,4 @@
-import React from "react";
+import {React, createContext, useState} from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {Box} from "@mui/material";
 
@@ -10,17 +10,20 @@ import Login from '../src/pages/Login';
 import DisplayTask from '../src/pages/DisplayTask';
 import UpdateTask from "./components/tasks/UpdateTask";
 
+// create loading context
+export const loadingContext = createContext({
+  isLoading: false,
+  setIsLoading: () => {}
+})
 
 function App() {
-
-  // title
-  const title = 'Task Application'
-
+  const [isLoading, setIsLoading] = useState(true);
   return (
     <BrowserRouter>
       <Box sx={{ display: 'flex' }}>
         <SideNav />
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <loadingContext value={{ isLoading, setIsLoading }}>
           <Routes>
             <Route element={<PrivateComp />} >
               <Route path='/task' element={<DisplayTask />} />
@@ -29,6 +32,7 @@ function App() {
             <Route path='/login' element={<Login />} />
             <Route path='/' element={<Home />} />
           </Routes>
+          </loadingContext>
         </Box>
       </Box>
     </BrowserRouter>

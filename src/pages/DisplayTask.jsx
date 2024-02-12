@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react';
+import { React, createContext, useContext, useEffect, useState } from 'react';
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -18,21 +18,27 @@ import TaskList from '../components/TaskList';
 import Title from '../components/Title';
 import CreateTask from '../components/tasks/CreateTask';
 
+//import loading context
+import { loadingContext } from '../App'; 
+
 // Custom style for Table Head
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#FFF8DC',
-    color: '#C71585',
-    fontWeight: 600,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: '#FFF8DC',
+        color: '#C71585',
+        fontWeight: 600,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
 }));
 
+// create context for tasks
+export const tasksContext = createContext();
+
 const DisplayTask = () => {
+    const {isLoading, setIsLoading} = useContext(loadingContext);
     const [tasks, setTasks] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const message = `Hi! ${JSON.parse(localStorage.getItem("user")).name}`;
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(3);
@@ -89,6 +95,7 @@ const DisplayTask = () => {
                     </div>
                     <Box>
                         <div>
+                            {/* Add Task */}
                             <CreateTask getTaskById={getTaskById} />
                         </div>
 
@@ -109,15 +116,17 @@ const DisplayTask = () => {
                                                     </TableRow>
                                                 </TableHead>
 
-                                                <TaskList
-                                                    tasks={tasks}
-                                                    deleteTaskById={deleteTaskById}
-                                                    rowsPerPage={rowsPerPage}
-                                                    page={page}
-                                                />
+                                                <tasksContext.Provider
+                                                    value={{ tasks, page, rowsPerPage, deleteTaskById }}>
+                                                    {/* Table Body */}
+                                                    <TaskList/>
+                                                </tasksContext.Provider>
+
 
                                             </Table>
                                         </TableContainer>
+
+                                        {/* Pagination */}
                                         <TablePagination
                                             rowsPerPageOptions={[1, 2, 3]}
                                             component="div"
