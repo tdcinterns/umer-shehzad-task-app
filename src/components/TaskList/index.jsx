@@ -11,7 +11,7 @@ import { tasksContext } from '../../pages/DisplayTask';
 
 
 const TaskList = () => {
-  const {tasks, rowsPerPage, page, deleteTaskById} = useContext(tasksContext);
+  const { tasks, rowsPerPage, page, deleteTaskById } = useContext(tasksContext);
 
   // calculate starting index for each page
   const startIndex = page * rowsPerPage + 1;
@@ -24,10 +24,13 @@ const TaskList = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((task, index) => (
                 <TableRow hover key={task.id}>
-                  <TableCell>{startIndex + index}</TableCell>
-                  <TableCell>{task.title}</TableCell>
-                  <TableCell>{task.discription}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ width: 60 }}>
+                    {startIndex + index}</TableCell>
+                  <TableCell sx={{ width: 140 }}>
+                    {task.title}</TableCell>
+                  <TableCell sx={{ width: 600 }}>
+                    {task.discription}</TableCell>
+                  <TableCell sx={{ width: 200 }}>
                     <Button onClick={() => deleteTaskById(task.id)}>
                       <DeleteIcon color='error' />
                     </Button>

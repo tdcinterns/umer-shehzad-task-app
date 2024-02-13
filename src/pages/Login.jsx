@@ -9,7 +9,6 @@ import axios from 'axios';
 
 // import files
 import Title from '../components/Title';
-import FormikLogin from '../components/FormikLogin';
 
 // Validation Schema
 const validationSchema = yup.object({
