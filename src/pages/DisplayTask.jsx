@@ -2,7 +2,7 @@ import { React, createContext, useContext, useEffect, useState } from 'react';
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { Paper } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import TablePagination from '@mui/material/TablePagination';
@@ -104,43 +104,50 @@ const DisplayTask = () => {
 
                         {
                             isLoading
-                                ? <CircularProgress color='secondary' />
-                                :
-                                <>
-                                    <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '1rem', border: '1px solid #C71585' }}>
-                                        <TableContainer sx={{ maxHeight: 440 }}>
-                                            <Table aria-label="custom table">
-                                                <TableHead >
-                                                    <TableRow>
-                                                        <StyledTableCell>NO.</StyledTableCell>
-                                                        <StyledTableCell>TITLE</StyledTableCell>
-                                                        <StyledTableCell>DISCRIPTION</StyledTableCell>
-                                                        <StyledTableCell align='center'>ACTIONS</StyledTableCell>
-                                                    </TableRow>
-                                                </TableHead>
+                                ? <CircularProgress color='secondary' sx={{ marginTop: '1rem' }} />
+                                : tasks.length > 0
+                                    ? <>
+                                        <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '1rem', border: '1px solid #C71585' }}>
+                                            <TableContainer sx={{ maxHeight: 440 }}>
+                                                <Table aria-label="custom table">
+                                                    <TableHead >
+                                                        <TableRow>
+                                                            <StyledTableCell>NO.</StyledTableCell>
+                                                            <StyledTableCell>TITLE</StyledTableCell>
+                                                            <StyledTableCell>DISCRIPTION</StyledTableCell>
+                                                            <StyledTableCell align='center'>ACTIONS</StyledTableCell>
+                                                        </TableRow>
+                                                    </TableHead>
 
-                                                <tasksContext.Provider
-                                                    value={{ tasks, page, rowsPerPage, deleteTaskById }}>
-                                                    {/* Table Body */}
-                                                    <TaskList />
-                                                </tasksContext.Provider>
+                                                    <tasksContext.Provider
+                                                        value={{ tasks, page, rowsPerPage, deleteTaskById }}>
+                                                        {/* Table Body */}
+                                                        <TaskList />
+                                                    </tasksContext.Provider>
 
 
-                                            </Table>
-                                        </TableContainer>
+                                                </Table>
+                                            </TableContainer>
 
-                                        {/* Pagination */}
-                                        <TablePagination
-                                            rowsPerPageOptions={[1, 2, 3]}
-                                            component="div"
-                                            count={tasks.length}
-                                            rowsPerPage={rowsPerPage}
-                                            page={page}
-                                            onPageChange={handleChangePage}
-                                            onRowsPerPageChange={handleChangeRowsPerPage}
-                                        />
-                                    </Paper>
-                                </>
+                                            {/* Pagination */}
+                                            <TablePagination
+                                                rowsPerPageOptions={[1, 2, 3]}
+                                                component="div"
+                                                count={tasks.length}
+                                                rowsPerPage={rowsPerPage}
+                                                page={page}
+                                                onPageChange={handleChangePage}
+                                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                            />
+                                        </Paper>
+                                    </>
+                                    : <Typography
+                                        variant='h6'
+                                        color='#C71585'
+                                        mt={3}
+                                    >
+                                        No Record Found. Press Create Task Button to add.
+                                    </Typography>
                         }
                     </Box>
                 </Stack>
