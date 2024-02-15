@@ -11,8 +11,13 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from '@mui/icons-material/Lock';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import HomeIcon from '@mui/icons-material/Home';
 // import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -66,6 +71,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   const navigate = useNavigate();
   const auth = localStorage.getItem("user");
 
@@ -74,6 +80,16 @@ export default function MiniDrawer() {
     navigate('/login');
   }
 
+  React.useEffect(() => {
+    const handleResize = () => {
+      setOpen(matches); // Update open state based on current screen size
+    };
+
+    window.addEventListener('resize', handleResize); // Add event listener
+
+    return () => window.removeEventListener('resize', handleResize); // Remove listener on cleanup
+  }, [matches]);
+
   return (
     <>
       <CssBaseline />
@@ -81,7 +97,7 @@ export default function MiniDrawer() {
       <Drawer variant="permanent" open={open}>
 
         <DrawerHeader>
-          <IconButton onClick={() => setOpen(!open)}>
+          <IconButton onClick={() => setOpen(!open)} color='secondary'>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
@@ -99,7 +115,6 @@ export default function MiniDrawer() {
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
                     color: '#C71585',
-                    // fontWeight: open ? "bold" : "normal"
                   }}
                 >
                   <ListItemIcon
@@ -109,9 +124,15 @@ export default function MiniDrawer() {
                       justifyContent: 'center',
                     }}
                   >
-                    {/* <MailIcon /> */}
+                    <AssignmentIcon color='secondary' />
                   </ListItemIcon>
-                  <ListItemText primary='Task' sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    primary='Task'
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      '& .MuiListItemText-primary': { fontWeight: 'bold' }
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
 
@@ -122,7 +143,6 @@ export default function MiniDrawer() {
                     justifyContent: open ? 'initial' : 'center',
                     px: 2.5,
                     color: '#C71585',
-                    // fontWeight: open ? "bold" : "normal"
                   }}
                 >
                   <ListItemIcon
@@ -132,12 +152,18 @@ export default function MiniDrawer() {
                       justifyContent: 'center',
                     }}
                   >
-                    {/* <MailIcon /> */}
+                    <LockIcon color='secondary' />
                   </ListItemIcon>
-                  <ListItemText primary='Logout' sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    primary='Logout'
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      '& .MuiListItemText-primary': { fontWeight: 'bold' }
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
-            
+
             </List>
             :
             <List>
@@ -158,9 +184,15 @@ export default function MiniDrawer() {
                       justifyContent: 'center',
                     }}
                   >
-                    {/* <MailIcon /> */}
+                    <LockOpenIcon color='secondary' />
                   </ListItemIcon>
-                  <ListItemText primary='Login' sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    primary='Login'
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      '& .MuiListItemText-primary': { fontWeight: 'bold' },
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
 
@@ -180,15 +212,20 @@ export default function MiniDrawer() {
                       justifyContent: 'center',
                     }}
                   >
-                    {/* <MailIcon /> */}
+                    <HomeIcon color='secondary' />
                   </ListItemIcon>
-                  <ListItemText primary='Home' sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText
+                    primary='Home'
+                    sx={{
+                      opacity: open ? 1 : 0,
+                      '& .MuiListItemText-primary': { fontWeight: 'bold' }
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
 
             </List>
         }
-
       </Drawer>
     </>
   );

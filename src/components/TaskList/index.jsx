@@ -30,13 +30,17 @@ const TaskList = () => {
                     {task.title}</TableCell>
                   <TableCell sx={{ width: 600 }}>
                     {task.discription}</TableCell>
-                  <TableCell sx={{ width: 200 }}>
+                  <TableCell sx={{ width: 200 }} align='center'>
+                    <span>
                     <Button onClick={() => deleteTaskById(task.id)}>
                       <DeleteIcon color='error' />
                     </Button>
+                    </span>
+                    <span>
                     <Button LinkComponent={Link} to={`/update/${task.id}`}>
                       <EditIcon color='secondary' />
                     </Button>
+                    </span>
                   </TableCell>
                 </TableRow>
               ))

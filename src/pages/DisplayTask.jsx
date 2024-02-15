@@ -112,7 +112,7 @@ const DisplayTask = () => {
                                                         <StyledTableCell>NO.</StyledTableCell>
                                                         <StyledTableCell>TITLE</StyledTableCell>
                                                         <StyledTableCell>DISCRIPTION</StyledTableCell>
-                                                        <StyledTableCell align='justify'>ACTION</StyledTableCell>
+                                                        <StyledTableCell align='center'>ACTIONS</StyledTableCell>
                                                     </TableRow>
                                                 </TableHead>
 
