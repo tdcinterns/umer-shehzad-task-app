@@ -19,7 +19,7 @@ import Title from '../components/Title';
 import CreateTask from '../components/tasks/CreateTask';
 
 //import loading context
-import { loadingContext } from '../App'; 
+import { loadingContext } from '../App';
 
 // Custom style for Table Head
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,17 +37,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 export const tasksContext = createContext();
 
 const DisplayTask = () => {
-    const {isLoading, setIsLoading} = useContext(loadingContext);
+    const { isLoading, setIsLoading } = useContext(loadingContext);
+    // console.log('Display', isLoading);
     const [tasks, setTasks] = useState([]);
     const message = `Hi! ${JSON.parse(localStorage.getItem("user")).name}`;
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(3);
 
     useEffect(() => {
-        // console.log('userID',userID);
         getTaskById()
-            .then(() => setIsLoading(false))
-            .catch(console.error);
+        // .then(() => setIsLoading(false))
+        // .catch(console.error);
     }, []);
 
     // get userID from localStorage
@@ -65,6 +65,7 @@ const DisplayTask = () => {
 
     // get tasks by userID
     const getTaskById = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(url);
             if (response.status !== 200) {
@@ -75,6 +76,8 @@ const DisplayTask = () => {
             // console.log('tasks:', tasks);
         } catch (err) {
             console.log('error:', err);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -119,7 +122,7 @@ const DisplayTask = () => {
                                                 <tasksContext.Provider
                                                     value={{ tasks, page, rowsPerPage, deleteTaskById }}>
                                                     {/* Table Body */}
-                                                    <TaskList/>
+                                                    <TaskList />
                                                 </tasksContext.Provider>
 
 

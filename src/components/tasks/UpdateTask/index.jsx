@@ -22,7 +22,8 @@ const validationSchema = yup.object({
 });
 
 const UpdateTask = () => {
-    const {isLoading, setIsLoading} = useContext(loadingContext);
+    const { isLoading, setIsLoading } = useContext(loadingContext);
+    // console.log('Display', isLoading);
     const [data, setData] = useState("");
     const params = useParams();
     const navigate = useNavigate();
@@ -32,15 +33,23 @@ const UpdateTask = () => {
 
     useEffect(() => {
         getSingleTaskDetails()
-            .then(() => setIsLoading(false))
-            .catch(console.error);
+        // .then(() => setIsLoading(false))
+        // .catch(console.error);
     }, [])
 
     // get single task details
     const getSingleTaskDetails = async () => {
-        let response = await axios.get(`https://65c09414dc74300bce8c426a.mockapi.io/tdcEval/user/${userID}/task/${params.id}`);
-        // console.log('response:', response.data);
-        setData(response.data);
+        setIsLoading(true);
+        try {
+            let response = await axios.get(`https://65c09414dc74300bce8c426a.mockapi.io/tdcEval/user/${userID}/task/${params.id}`);
+            // console.log('response:', response.data);
+            setData(response.data);
+        } catch (err) {
+            console.log('error: ', err);
+        } finally {
+            setIsLoading(false);
+        }
+
     }
 
 
