@@ -1,25 +1,17 @@
-import { React, createContext, useContext, useEffect, useState } from 'react';
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import { Paper, Typography } from '@mui/material';
+import { React, createContext, memo, useContext, useEffect, useState, lazy, Suspense } from 'react';
+
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
-import TablePagination from '@mui/material/TablePagination';
-import CircularProgress from '@mui/material/CircularProgress';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import Table from '@mui/material/Table';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { Stack, Container, Box, Paper, Typography, CircularProgress, Avatar } from '@mui/material';
+import { Table, TableHead, TableRow, TablePagination, TableContainer, Grid } from '@mui/material';
 
-// import files
 import TaskList from '../components/TaskList';
-import Title from '../components/Title';
+import Title from '../components/generic/Title';
 import CreateTask from '../components/tasks/CreateTask';
 
-//import loading context
-import { loadingContext } from '../App';
+import MyPic from '../assets/my-pic-1.png';
+import CONSTANT from '../constants/constant';
 
 // Custom style for Table Head
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,22 +29,53 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 export const tasksContext = createContext();
 
 const DisplayTask = () => {
-    const { isLoading, setIsLoading } = useContext(loadingContext);
-    // console.log('Display', isLoading);
     const [tasks, setTasks] = useState([]);
-    const message = `Hi! ${JSON.parse(localStorage.getItem("user")).name}`;
+    const [isLoading, setIsLoading] = useState(false);
+    debugger
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(3);
+    const userID = JSON.parse(localStorage.getItem("user")).id;
+    const userName = JSON.parse(localStorage.getItem("user")).name;
+    const message = `${CONSTANT.greeting} ${userName}`;
 
+    // useEffect(() => {
+    //     getTaskById();
+    // }, []);
+
+    // get all tasks by userID
+    const getTaskById = async () => {
+        try {
+            setIsLoading(true);
+            console.log(isLoading);
+            debugger
+            const response = await axios.get(`${CONSTANT.baseURL}/${userID}/task`);
+            if (response.status !== 200) {
+                throw new Error(`Response Status: ${response.status}`);
+            }
+            setTasks(response.data);
+            setIsLoading(false);
+            console.log(isLoading);
+            debugger
+        } catch (err) {
+            setIsLoading(false);
+            console.log('Error fetching task by ID:', err);
+        }
+    }
     useEffect(() => {
-        getTaskById()
-        // .then(() => setIsLoading(false))
-        // .catch(console.error);
+        getTaskById();
     }, []);
 
-    // get userID from localStorage
-    const userID = JSON.parse(localStorage.getItem("user")).id;
-    const url = `https://65c09414dc74300bce8c426a.mockapi.io/tdcEval/user/${userID}/task`;
+    // delete task by task ID
+    const deleteTaskById = async (id) => {
+        try {
+            let response = await axios.delete(`${CONSTANT.baseURL}/${userID}/task/${id}`);
+            if (response) {
+                getTaskById();
+            }
+        } catch (err) {
+            console.log('Error deleting task:', err);
+        }
+    }
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -63,97 +86,71 @@ const DisplayTask = () => {
         setPage(0);
     };
 
-    // get tasks by userID
-    const getTaskById = async () => {
-        setIsLoading(true);
-        try {
-            const response = await axios.get(url);
-            if (response.status !== 200) {
-                throw new Error(`Response Status: ${response.status}`);
-            }
-            // console.log('data', response.data);
-            setTasks(response.data);
-            // console.log('tasks:', tasks);
-        } catch (err) {
-            console.log('error:', err);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    // delete task by task ID
-    const deleteTaskById = async (id) => {
-        let response = await axios.delete(`https://65c09414dc74300bce8c426a.mockapi.io/tdcEval/user/${userID}/task/${id}`);
-        if (response) {
-            getTaskById();
-        }
-    }
-
     return (
-        <>
-            <Container >
-                <Stack textAlign='center' spacing={5} marginTop='40px'>
-                    <div>
+        <Container>
+            <Box sx={{ marginTop: '1rem' }}>
+                <Grid container alignItems='center'>
+                    <Grid item xs={10}>
                         <Title title={message} />
-                    </div>
-                    <Box>
-                        <div>
-                            {/* Add Task */}
-                            <CreateTask getTaskById={getTaskById} />
-                        </div>
+                    </Grid>
+                    <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Avatar
+                            alt={`${CONSTANT.userName}`}
+                            src={`${MyPic}`}
+                            sx={{ bgcolor: `${CONSTANT.color.avatarBg}`, width: 56, height: 56 }}
+                        />
+                    </Grid>
+                </Grid>
+            </Box>
+            <Stack textAlign='center' spacing={6} mt={3}>
+                <Box>
+                    <CreateTask getTaskById={getTaskById} />
+                </Box>
+                <Box>
+                    {
+                        isLoading
+                            ? (<CircularProgress color={CONSTANT.color.base} />)
+                            : tasks.length > 0
+                                ? (
+                                    <Paper sx={{ width: '100%', overflow: 'hidden', border: `1px solid ${CONSTANT.color.border}` }}>
+                                        <TableContainer sx={{ maxHeight: 440 }}>
+                                            <Table aria-label='custom table'>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell>NO.</StyledTableCell>
+                                                        <StyledTableCell>TITLE</StyledTableCell>
+                                                        <StyledTableCell>DESCRIPTION</StyledTableCell>
+                                                        <StyledTableCell align='center'>ACTIONS</StyledTableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <tasksContext.Provider value={{ tasks, page, rowsPerPage, deleteTaskById }}>
 
-                        {
-                            isLoading
-                                ? <CircularProgress color='secondary' sx={{ marginTop: '1rem' }} />
-                                : tasks.length > 0
-                                    ? <>
-                                        <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: '1rem', border: '1px solid #C71585' }}>
-                                            <TableContainer sx={{ maxHeight: 440 }}>
-                                                <Table aria-label="custom table">
-                                                    <TableHead >
-                                                        <TableRow>
-                                                            <StyledTableCell>NO.</StyledTableCell>
-                                                            <StyledTableCell>TITLE</StyledTableCell>
-                                                            <StyledTableCell>DISCRIPTION</StyledTableCell>
-                                                            <StyledTableCell align='center'>ACTIONS</StyledTableCell>
-                                                        </TableRow>
-                                                    </TableHead>
+                                                    <TaskList getTaskById={getTaskById} />
 
-                                                    <tasksContext.Provider
-                                                        value={{ tasks, page, rowsPerPage, deleteTaskById }}>
-                                                        {/* Table Body */}
-                                                        <TaskList />
-                                                    </tasksContext.Provider>
-
-
-                                                </Table>
-                                            </TableContainer>
-
-                                            {/* Pagination */}
-                                            <TablePagination
-                                                rowsPerPageOptions={[1, 2, 3]}
-                                                component="div"
-                                                count={tasks.length}
-                                                rowsPerPage={rowsPerPage}
-                                                page={page}
-                                                onPageChange={handleChangePage}
-                                                onRowsPerPageChange={handleChangeRowsPerPage}
-                                            />
-                                        </Paper>
-                                    </>
-                                    : <Typography
-                                        variant='h6'
-                                        color='#C71585'
-                                        mt={3}
-                                    >
+                                                </tasksContext.Provider>
+                                            </Table>
+                                        </TableContainer>
+                                        <TablePagination
+                                            rowsPerPageOptions={[1, 2, 3]}
+                                            component='div'
+                                            count={tasks.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            onPageChange={handleChangePage}
+                                            onRowsPerPageChange={handleChangeRowsPerPage}
+                                        />
+                                    </Paper>
+                                )
+                                : (
+                                    <Typography variant='h6' color={CONSTANT.color.border} mt={3}>
                                         No Record Found. Press Create Task Button to add.
                                     </Typography>
-                        }
-                    </Box>
-                </Stack>
-            </Container>
-        </>
+                                )
+                    }
+                </Box>
+            </Stack>
+        </Container>
     )
 }
 
-export default DisplayTask
+export default memo(DisplayTask)

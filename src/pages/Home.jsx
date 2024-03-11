@@ -1,21 +1,21 @@
 import React, { useEffect} from 'react';
-import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router-dom';
 
-// import files
-import Title from '../components/Title';
+import { useNavigate } from 'react-router-dom';
+import { Typography } from '@mui/material';
+
+import Title from '../components/generic/Title';
 
 const Home = () => {
   const title = 'Welcome to our Task Management App';
   const navigate = useNavigate();
 
   // if user logged in, it should not visit Home Page
-  useEffect(() => {
-    const auth = localStorage.getItem("user");
-    if (auth) {
-      navigate('/task');
-    }
-  });
+  // useEffect(() => {
+  //   const auth = localStorage.getItem("user");
+  //   if (auth) {
+  //     navigate('/task');
+  //   }
+  // });
 
   return (
     <>

@@ -1,25 +1,19 @@
-import * as React from 'react';
+import React from 'react';
+
+import { useNavigate } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
+import { List, CssBaseline, Divider, IconButton, useMediaQuery } from '@mui/material';
+import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import MuiDrawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import HomeIcon from '@mui/icons-material/Home';
-// import MailIcon from '@mui/icons-material/Mail';
-import { useNavigate } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material';
 
-const drawerWidth = 240;
+import CONSTANT from '../../constants/constant';
+
+const drawerWidth = 180;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -97,106 +91,18 @@ export default function MiniDrawer() {
       <Drawer variant="permanent" open={open}>
 
         <DrawerHeader>
-          <IconButton onClick={() => setOpen(!open)} color='secondary'>
+          <IconButton onClick={() => setOpen(!open)} color={CONSTANT.color.base}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
 
         <Divider />
+        <div>
+          {
+            auth ?
+              <List>
 
-        {
-          auth ?
-            <List>
-
-              <ListItem disablePadding sx={{ display: 'block' }} onClick={() => { navigate("/task") }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                    color: '#C71585',
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <AssignmentIcon color='secondary' />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary='Task'
-                    sx={{
-                      opacity: open ? 1 : 0,
-                      '& .MuiListItemText-primary': { fontWeight: 'bold' }
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem disablePadding sx={{ display: 'block' }} onClick={logout}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                    color: '#C71585',
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <LockIcon color='secondary' />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary='Logout'
-                    sx={{
-                      opacity: open ? 1 : 0,
-                      '& .MuiListItemText-primary': { fontWeight: 'bold' }
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-
-            </List>
-            :
-            <List>
-
-              <ListItem disablePadding sx={{ display: 'block' }} onClick={() => { navigate("/login") }}>
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? 'initial' : 'center',
-                    px: 2.5,
-                    color: '#C71585',
-                  }}
-                >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      mr: open ? 3 : 'auto',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <LockOpenIcon color='secondary' />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary='Login'
-                    sx={{
-                      opacity: open ? 1 : 0,
-                      '& .MuiListItemText-primary': { fontWeight: 'bold' },
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-
-              <ListItem disablePadding sx={{ display: 'block' }} onClick={() => { navigate("/") }}>
+                {/* <ListItem disablePadding sx={{ display: 'block' }} onClick={() => { navigate("/") }}>
                 <ListItemButton
                   sx={{
                     minHeight: 48,
@@ -222,10 +128,99 @@ export default function MiniDrawer() {
                     }}
                   />
                 </ListItemButton>
-              </ListItem>
+              </ListItem> */}
 
-            </List>
-        }
+                <ListItem disablePadding sx={{ display: 'block' }} onClick={() => { navigate("/task") }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                      color: `${CONSTANT.color.border}`,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <AssignmentIcon color={CONSTANT.color.base} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary='Task'
+                      sx={{
+                        opacity: open ? 1 : 0,
+                        '& .MuiListItemText-primary': { fontWeight: 'bold' }
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding sx={{ display: 'block' }} onClick={logout}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                      color: `${CONSTANT.color.border}`,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <LockIcon color={CONSTANT.color.base} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary='Logout'
+                      sx={{
+                        opacity: open ? 1 : 0,
+                        '& .MuiListItemText-primary': { fontWeight: 'bold' }
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+
+              </List>
+              :
+              <List>
+
+                <ListItem disablePadding sx={{ display: 'block' }} onClick={() => { navigate("/login") }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? 'initial' : 'center',
+                      px: 2.5,
+                      color: `${CONSTANT.color.border}`,
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        mr: open ? 3 : 'auto',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <LockOpenIcon color={CONSTANT.color.base} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary='Login'
+                      sx={{
+                        opacity: open ? 1 : 0,
+                        '& .MuiListItemText-primary': { fontWeight: 'bold' },
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+
+              </List>
+          }
+        </div>
       </Drawer>
     </>
   );
