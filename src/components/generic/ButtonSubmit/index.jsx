@@ -8,7 +8,7 @@ const index = (prop) => {
     return (
         <>
             <Button
-                disabled={prop.isLoading}
+                disabled={prop.disabled}
                 color={CONSTANT.color.base}
                 variant="contained"
                 type="submit"

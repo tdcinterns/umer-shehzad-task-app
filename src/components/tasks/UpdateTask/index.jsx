@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ModalForm from '../../ModalForm';
+import { selectTaskById, updateTask } from '../../../redux/tasksSlice';
 
 import CONSTANT from '../../../constants/constant';
+import { useNavigate } from 'react-router-dom';
 
 // Validation Schema
 const validationSchema = yup.object({
@@ -20,30 +22,13 @@ const validationSchema = yup.object({
 
 
 const UpdateTask = (props) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const userID = JSON.parse(localStorage.getItem("user")).id;
-    const url = `${CONSTANT.baseURL}/${userID}/task/${props.taskId}`;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        getSingleTaskDetails();
-    }, [props.taskId, userID])
-
-    // get single task details
-    const getSingleTaskDetails = async () => {
-        try {
-            setIsLoading(true);
-            let response = await axios.get(url);
-            if (response.status === 200) {
-                formik.setValues(response.data)
-                setIsLoading(false);
-            } else {
-                setIsLoading(false);
-                throw new Error(`Response Status: ${response.status}`);
-            }
-        } catch (err) {
-            setIsLoading(false);
-            console.log('Error fetching single task: ', err);
-        }
+    const task = useSelector((state) => selectTaskById(state, props.taskId));
+    const initialValues = {
+        title: task.title,
+        discription: task.discription
     }
 
     const handleClose = (values) => {
@@ -54,22 +39,17 @@ const UpdateTask = (props) => {
     };
 
     const formik = useFormik({
-        initialValues: {
-            title: '',
-            discription: ''
-        },
+        initialValues: initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await axios.put(url, values);
-                if (response.status === 200) {
-                    handleClose(values);
-                    props.getTaskById();
-                } else {
-                    throw new Error(`Response Status: ${response.status}`);
-                }
+                const { title, discription } = values;
+
+                dispatch(updateTask({ id: props.taskId, discription, title })).unwrap();
+                handleClose(values);
+                navigate('/task');
             } catch (err) {
-                console.log('Error updating task:', err);
+                console.error('Failed to update the task', err);
             }
         }
     });
@@ -80,7 +60,6 @@ const UpdateTask = (props) => {
             open={true}
             formik={formik}
             btnName={CONSTANT.updateBtnName}
-            isLoading={isLoading}
         />
     );
 };

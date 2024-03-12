@@ -1,17 +1,35 @@
-import React, { useContext, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { Button, TableBody, TableRow, TableCell } from '@mui/material';
+import { Button, TableBody, TableRow, TableCell, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { useDispatch } from 'react-redux';
 
-import { tasksContext } from '../../pages/DisplayTask';
 import UpdateTask from '../tasks/UpdateTask';
+import { deleteTask } from '../../redux/tasksSlice';
 
 import CONSTANT from '../../constants/constant';
 
-const TaskList = ({ getTaskById }) => {
-  const { tasks, rowsPerPage, page, deleteTaskById } = useContext(tasksContext);
+const TaskList = ({ tasks, page, rowsPerPage, setPage }) => {
+  const dispatch = useDispatch();
+
   const [editTaskId, setEditTaskId] = useState(null);
+
+  // Update page number when the last task on the page is deleted
+  useEffect(() => {
+    const totalPages = Math.ceil(tasks.length / rowsPerPage);
+    if (page > totalPages - 1) {
+      setPage(totalPages - 1);
+    }
+  }, [tasks, page, rowsPerPage, setPage]);
+
+  const onDeleteTaskClicked = (taskID) => {
+    try {
+      dispatch(deleteTask({ id: taskID })).unwrap();
+    } catch (err) {
+      console.log('Faied to delete the post', err);
+    }
+  }
 
   const handleEditClick = (taskId) => {
     setEditTaskId(taskId); // Set the ID of the task being edited
@@ -23,40 +41,39 @@ const TaskList = ({ getTaskById }) => {
 
   // calculate starting index for each page
   const startIndex = page * rowsPerPage + 1;
+
   return (
     <>
-      <TableBody>
         {
           tasks
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((task, index) => (
-              <TableRow hover key={task.id}>
+              <TableRow hover key={task.id} >
                 <TableCell sx={{ width: 60 }}>
-                  {startIndex + index}</TableCell>
+                  {startIndex + index}
+                </TableCell>
                 <TableCell sx={{ width: 140 }}>
-                  {task.title}</TableCell>
+                  {task.title}
+                </TableCell>
                 <TableCell sx={{ width: 600 }}>
-                  {task.discription}</TableCell>
+                  {task.discription}
+                </TableCell>
                 <TableCell sx={{ width: 200 }} align='center'>
-                  <span>
-                    <Button onClick={() => deleteTaskById(task.id)}>
-                      <DeleteIcon color={CONSTANT.color.error} />
-                    </Button>
-                  </span>
-                  <span>
-                    <Button onClick={() => handleEditClick(task.id)}>
-                      <EditIcon color={CONSTANT.color.base} />
-                    </Button>
-                  </span>
+                  <Button onClick={() => onDeleteTaskClicked(task.id)}>
+                    <DeleteIcon color={CONSTANT.color.error} />
+                  </Button>
+
+                  <Button onClick={() => handleEditClick(task.id)}>
+                    <EditIcon color={CONSTANT.color.base} />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))
         }
-      </TableBody>
       {
         editTaskId &&
         (
-          <UpdateTask taskId={editTaskId} handleClose={handleCloseModal} getTaskById={getTaskById} />
+          <UpdateTask taskId={editTaskId} handleClose={handleCloseModal} />
         )
       }
     </>

@@ -2,10 +2,12 @@ import React from 'react';
 
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import ModalForm from '../../ModalForm';
 import ButtonSubmit from '../../generic/ButtonSubmit';
+import { addNewTask } from '../../../redux/tasksSlice';
 
 import CONSTANT from '../../../constants/constant';
 
@@ -20,9 +22,11 @@ const validationSchema = yup.object({
 });
 
 const CreateTask = ({ getTaskById }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(false);
-  const userID = JSON.parse(localStorage.getItem("user")).id;
-  const url = `${CONSTANT.baseURL}/${userID}/task`;
+  const userName = JSON.parse(localStorage.getItem("user")).name;
 
   // Initial Values
   const initialValues = {
@@ -44,16 +48,15 @@ const CreateTask = ({ getTaskById }) => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        
-        const response = await axios.post(url, values);
-        console.log(response);
-        if (response.status !== 201) {
-          throw new Error(`Response Status: ${response.status}`);
-        }
+        values.name = userName;  // add username to payload
+        const { title, discription, name } = values;  //destructure data
+
+        dispatch(addNewTask({ title, discription, name })).unwrap();
+
         handleClose(values);
-        getTaskById();
+        navigate('/task');
       } catch (err) {
-        console.log('error:', err);
+        console.error('Failed to save the task', err);
       }
     }
   });
