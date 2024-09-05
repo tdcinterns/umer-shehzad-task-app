@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import { Container, Stack, TextField, Alert, IconButton } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Title from '../components/generic/Title';
 import ButtonSubmit from '../components/generic/ButtonSubmit';
@@ -81,6 +83,17 @@ function Login() {
     }
   }, [navigate]);
 
+  // show toast for login credentials
+  useEffect(() => {
+    toast.info(
+      `Please use the following User Credentials for the Login:         
+      Username: ALi1122@gmail.com
+      Password: 11223344`, {
+      position: 'top-right',
+      autoClose: 10000, // 10 seconds
+    });
+  }, []);
+
   const handleCloseAlert = () => {
     setShowAlert(false);
     setAlertMessage('');
@@ -88,6 +101,7 @@ function Login() {
 
   return (
     <>
+      <ToastContainer />
       <Stack sx={{ height: '70vh', marginTop: '5%' }} spacing={2} alignItems='center' justifyContent='center'>
         {showAlert && (
           <Alert severity="error" action={
@@ -143,7 +157,7 @@ function Login() {
                     </div>
                   </div>
                   <div>
-                    <ButtonSubmit name={CONSTANT.login.BtnName} isLoading={isLoading}/>
+                    <ButtonSubmit name={CONSTANT.login.BtnName} isLoading={isLoading} />
                   </div>
                 </Stack>
               </form>
